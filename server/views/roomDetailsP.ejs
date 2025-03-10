@@ -212,7 +212,7 @@
     <script>
 
 
-        const socket = io("http://172.21.88.12:8000"); // Change this if using a deployed server
+        const socket = io("/"); // Change this if using a deployed server
 
 
 
@@ -957,7 +957,7 @@
 
             socket.emit("leavingRoom", data);
 
-            window.location.replace("http://172.21.88.12:8000/user");
+            window.location.replace("/user");
         });
 
 

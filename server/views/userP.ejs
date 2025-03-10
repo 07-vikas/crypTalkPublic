@@ -395,7 +395,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
-        const socket = io("http://172.21.88.12:8000"); // Change this if using a deployed server
+        const socket = io("/"); // Change this if using a deployed server
 
 
         socket.on("connect", async () => {
@@ -674,7 +674,7 @@
 
 
         if (!localStorage.getItem("userName") || !localStorage.getItem("userId") || !localStorage.getItem("userAvatar")) {
-            window.location.replace("http://172.21.88.12:8000/");
+            window.location.replace("/");
         }
         document.addEventListener("DOMContentLoaded", function () {
             console.log("Page has fully loaded!");
@@ -781,7 +781,7 @@
             socket.emit("leavingRooms", data);
             localStorage.clear();
             clearAllDatabases(); // Clears all databases
-            window.location.replace("http://172.21.88.12:8000/user");
+            window.location.replace("/user");
         });
 
 
@@ -874,7 +874,7 @@
 
 
         function openChat(roomId) {
-            const url = `http://172.21.88.12:8000/user/${roomId}`;
+            const url = `/user/${roomId}`;
 
             window.location.href = url;
         }

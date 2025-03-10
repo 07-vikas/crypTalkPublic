@@ -12,18 +12,19 @@ const PORT = process.env.PORT || 8000;
 
 // Create an HTTP server
 const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: 'http://172.21.88.12:5500', // Update with your frontend URL
-        credentials: true
-    }
-});
+// const io = new Server(server, {
+//     cors: {
+//         origin: 'http://172.21.88.12:5500', // Update with your frontend URL
+//         credentials: true
+//     }
+// });
+const io = new Server(server);
 
 // Enable CORS
-app.use(cors({
-    origin: 'http://172.21.88.12:5500',
-    credentials: true
-}));
+// app.use(cors({
+//     origin: 'http://172.21.88.12:5500',
+//     credentials: true
+// }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
