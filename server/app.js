@@ -4,9 +4,11 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io');
+require('dotenv').config();
+
 
 const app = express();
-const PORT = env.process.PORT || 8000;
+const PORT = process.env.PORT || 8000;
 
 // Create an HTTP server
 const server = http.createServer(app);
