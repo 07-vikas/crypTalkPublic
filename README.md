@@ -19,7 +19,7 @@
 
 ## 🚀 Try it Live
 
-👉 [Use CrypTalk Now]([https://cryptalkpublic.onrender.com])
+👉 [Use CrypTalk Now]((https://cryptalkpublic.onrender.com))
 
 No login required. Just create a room or share your unique room ID to start chatting securely.
 
