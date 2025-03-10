@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>roomDetails</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #13131f;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        .room-details {
+            width: 100%;
+            height: auto;
+            background-color: rgb(54, 54, 54);
+
+            text-align: center;
+
+            border-bottom: 1px solid rgb(88, 88, 88);
+
+        }
+
+        .room-details>div {
+            width: 1005;
+            height: 200px;
+
+            background-color: #13131f;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .room-details div .avatar-div {
+            width: 150px;
+            aspect-ratio: 1/1;
+
+            background-image: url('https://wallpapercave.com/wp/wp6988971.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            border-radius: 50%;
+
+            border: 2px solid rgb(0, 0, 0);
+
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+        }
+
+        .room-details div .avatar-div i {
+            color: white;
+        }
+
+        .room-details p {
+            font-size: 1.25rem;
+            color: beige;
+            gap: 10px;
+            padding: 20px 0px;
+            background-color: #13131f;
+
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .room-details button {
+            all: unset;
+            margin-left: 5px;
+            width: 15px;
+            aspect-ratio: 1/1;
+        }
+
+
+
+        .leave-btn {
+            all: unset;
+            width: 20%;
+            margin-left: calc(40vw - 10px);
+            margin-top: 5%;
+
+            font-size: 1rem;
+            padding: 10px;
+            background-color: rgb(198, 0, 0);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            color: white;
+
+            border-radius: 10px;
+        }
+
+        .members {
+            width: 100%;
+            height: auto;
+            margin-top: 5%;
+            border-top: 1px solid rgb(101, 101, 101);
+        }
+
+
+
+        .chat-item {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #000000;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chat-item:hover {
+            background-color: #333;
+        }
+
+        .chat-avatar {
+            height: 90%;
+            border-radius: 50%;
+            margin-right: 5%;
+            background-color: gray;
+            aspect-ratio: 1/1;
+
+            background-image: url('https://wallpapercave.com/wp/wp6988971.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+        }
+
+        .chat-details {
+            flex: 1;
+        }
+
+        .chat-name {
+            font-weight: bold;
+            font-size: 1rem;
+            color: rgb(146, 146, 146);
+        }
+
+        .chat-message {
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+        .message {
+            background: white;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="room-details">
+        <div>
+            <div class="avatar-div"></div>
+        </div>
+        <p><span class="roomName">EE gang</span> <button class="edit-name-btn"><i class="fa-solid fa-pen"></i></button>
+        </p>
+    </div>
+
+    <button class="leave-btn">LEAVE</button>
+
+    <div class="members">
+        <!-- <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar avatar-div"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('E4')">
+            <div class="chat-avatar avatar-div"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+            </div>
+        </div> -->
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"
+        integrity="sha512-8BHxHDLsOHx+flIrQ0DrZcea7MkHqRU5GbTHmbdzMRnAaoCIkZ97PqZcXJkKZckMMhqfoeaJE+DNUVuyoQsO3Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+
+        const socket = io("http://172.21.88.12:8000"); // Change this if using a deployed server
+
+
+
+        socket.on("connect", async () => {
+            console.log("Connected to WebSocket server");
+
+            const rooms = await getRooms(); // Fetch stored rooms
+            console.log(socket.id);
+            console.log("List of rooms ...", rooms);
+
+            const data = {
+                userId: localStorage.getItem("userId"),
+                socketId: socket.id,
+                roomList: rooms
+            };
+
+            console.log(data);
+
+            socket.emit("userJoin", data);
+        });
+
+        socket.on("newUserJoin", (data) => {
+            console.log(data);
+
+            //Add the user to db at all the places
+            addNewRoomMember(data);
+
+
+            //Sending the the room info so that the new user update its db
+
+
+        });
+
+        //This is recieved by all the new comer's for setting the room info in there db, all the previous info of the room
+        socket.on("joinedRoomInfo", (data) => {
+            console.log("the recieved room details are : ", data);
+            const { roomId, roomDetails } = data;
+            console.log(`Received room details for room ${roomId}:`, roomDetails);
+
+            // //Adding the room entry to the db
+            // joinRoom(roomId, `${localStorage.getItem("userName")}'s New room`, roomBackgroundUrl, [{
+            //     userId: `${localStorage.getItem("userId")}`,
+            //     userName: `${localStorage.getItem("userName")}`,
+            //     avatarUrl: `${localStorage.getItem("userAvatar")}`
+            // }]);
+
+            updateRoomInfo(roomDetails);
+            window.location.reload();
+
+        });
+
+        //Server requesting for room details ...
+        socket.on("requestRoomData", async ({ roomId, requestingUser }) => {
+            console.log(`Received request to send room data for room ${roomId}`);
+
+            // Fetch room details from IndexedDB
+            const roomDetails = await getRoomDetailsFromDB(roomId);
+            console.log(roomDetails);
+            if (roomDetails) {
+                socket.emit("roomDataFromExistingSocket", {
+                    roomId,
+                    roomDetails,
+                    requestingUser: requestingUser // Send back to requesting socket
+                });
+            }
+        });
+
+        socket.on("message", (data) => {
+            console.log("A message recieved : ", data);
+            const { chatId, roomId, chatTime, chatContent, senderId, senderName, senderAvatar } = data;
+
+
+            addChat(chatId, roomId, chatTime, chatContent, "delivered", senderName, "recieved");
+        });
+
+        socket.on("roomNameUpdate", (data) => {
+            console.log("The new room name is : ", data);
+
+            roomNameUpdateLive(data.roomId, data.newName);
+            updateRoomName(data.roomId, data.newName);
+        });
+
+        socket.on("updateRoomBackground", (data) => {
+            console.log("The new room abckground url dat is : ", data);
+
+            roomBackgroundUpdateLive(data.roomId, data.newurl);
+            updateRoomBackgroundUrl(data.roomId, data.newUrl);
+        });
+
+        socket.on("leavingRoom", (data) => {
+            console.log("the user leaving req data is : ", data);
+
+            removeMemberFromRoom(data.roomId, data.userId);
+            window.location.reload();
+        });
+
+        socket.on("leavingRooms", (data) => {
+            console.log("The leaving rooms req came with data : ", data);
+            removeUserFromAllRooms(data.userId);
+            window.location.reload();
+        });
+
+
+
+
+
+        document.querySelector(".edit-name-btn").addEventListener("click", (evt) => {
+            evt.preventDefault();
+
+            const oldName = document.querySelector(".roomName").innerText;
+
+            const userInput = prompt("Enter New Name");
+            if (userInput !== null && userInput.trim() !== "") {
+                console.log("User entered:", userInput);
+                // Trigger an event or call a function here
+
+                const roomId = getRoomIdFromURL();
+
+                const data = {
+                    roomId: roomId,
+                    newName: userInput,
+                    oldName: oldName
+                }
+
+                console.log("Sending this for room name update : ", data);
+                socket.emit("roomNameUpdate", data);
+
+                roomNameUpdateLive(roomId, userInput);
+                updateRoomName(roomId, userInput);
+            }
+
+        });
+
+        function roomNameUpdateLive(roomId, newName) {
+            document.querySelector(".roomName").innerText = newName;
+        }
+
+        function roomBackgroundUpdateLive(roomId, newUrl) {
+            document.querySelector(".room-details .avatar-div").style.backgroundImage = `url('${newUrl}')`;
+        }
+
+
+
+        const avatarDiv = document.querySelector(".avatar-div");
+        const backgrounds = [
+            "https://wallpapercave.com/wp/wp6988971.jpg",
+            "https://www.techgrapple.com/wp-content/uploads/2016/08/beautiful-sky-whatsapp-chat-background.jpg",
+            "https://wallpapercave.com/wp/wp6988830.jpg",
+            "https://wallpapercave.com/wp/wp4892368.jpg",
+            "https://www.techgrapple.com/wp-content/uploads/2016/08/rainbow-whatsapp-chat-wallpaper.png",
+            "https://preview.redd.it/vvqgcdp39x551.jpg?auto=webp&s=9736ebe43d68a156afe5f22e294d7f4b757f7686",
+            "https://wallpapercave.com/wp/wp6028948.jpg",
+            "https://th.bing.com/th/id/OIP.GlZRCiKdvq64dmxhKkMZ8wHaQD?rs=1&pid=ImgDetMain",
+            "https://wallpapercave.com/wp/wp6989074.jpg",
+            "https://th.bing.com/th/id/OIP._JBlnpE2k_GIxguPJu45LgHaQD?rs=1&pid=ImgDetMain"
+        ];
+
+        let currentIndex = 0;  // Keep track of current avatar index
+        let startX = 0;  // Track swipe start position
+
+        // Function to update avatar background
+        function updateAvatar() {
+            avatarDiv.style.backgroundImage = `url('${backgrounds[currentIndex]}')`;
+
+            const roomId = getRoomIdFromURL();
+            const newUrl = backgrounds[currentIndex];
+
+            const data = {
+                roomId: roomId,
+                newUrl: newUrl
+            };
+
+            console.log("The new url data is : ", data);
+
+            socket.emit("updateRoomBackground", data);
+            updateRoomBackgroundUrl(roomId, newUrl);
+        }
+
+        // Touch event listeners (for mobile)
+        avatarDiv.addEventListener("touchstart", (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        avatarDiv.addEventListener("touchend", (e) => {
+            let endX = e.changedTouches[0].clientX;
+            handleSwipe(endX);
+        });
+
+        // Mouse event listeners (for desktop)
+        avatarDiv.addEventListener("mousedown", (e) => {
+            startX = e.clientX;
+        });
+
+        avatarDiv.addEventListener("mouseup", (e) => {
+            let endX = e.clientX;
+            handleSwipe(endX);
+        });
+
+        // Function to handle swipe logic
+        function handleSwipe(endX) {
+            let deltaX = endX - startX;
+
+            if (Math.abs(deltaX) > 50) { // Set minimum swipe threshold
+                if (deltaX < 0) {
+                    // Swiped left
+                    currentIndex = (currentIndex + 1) % backgrounds.length;
+                } else {
+                    // Swiped right
+                    currentIndex = (currentIndex - 1 + backgrounds.length) % backgrounds.length;
+                }
+                updateAvatar();
+            }
+        }
+
+        // // Initialize first avatar
+        // updateAvatar();
+
+
+
+
+
+
+
+
+
+
+        const DB_NAME = "chatApp";
+        const DB_VERSION = 1;
+        let db;
+
+        console.log(DB_NAME);
+
+        // Open IndexedDB
+        function openDB() {
+            console.log("Opening or creating the indexeddb's ....");
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    let db = event.target.result;
+
+                    if (!db.objectStoreNames.contains("rooms")) {
+                        const roomsStore = db.createObjectStore("rooms", { keyPath: "roomId" });
+                    }
+
+                    if (!db.objectStoreNames.contains("messages")) {
+                        const messagesStore = db.createObjectStore("messages", { keyPath: "chatId" });
+                        messagesStore.createIndex("roomId", "roomId", { unique: false });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    console.log("Success ...");
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+
+
+
+
+
+        // Add or Join a Room
+        async function joinRoom(roomId, roomName, roomBackgroundUrl, members) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                store.put({ roomId, roomName, roomBackgroundUrl, joinedTime: new Date().toISOString(), members });
+
+                tx.oncomplete = () => resolve("Room joined successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Add a chat message
+        async function addChat(chatId, roomId, chatTime, chatContent, chatStatus, senderName, chatType) {
+            console.log("Adding new chat ...");
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readwrite");
+                const store = tx.objectStore("messages");
+
+                store.put({ chatId, roomId, chatTime, chatContent, chatStatus, senderName, chatType });
+
+                tx.oncomplete = () => resolve("Chat added successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Get all chats from a specific room
+        async function getChatsByRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readonly");
+                const store = tx.objectStore("messages");
+                const index = store.index("roomId");
+                const request = index.getAll(roomId);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Leave a Room (Remove it from IndexedDB)
+        async function leaveRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                store.delete(roomId);
+
+                tx.oncomplete = () => resolve("Room left successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Clear all chats in a specific room
+        async function clearChatsByRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readwrite");
+                const store = tx.objectStore("messages");
+                const index = store.index("roomId");
+
+                index.getAll(roomId).onsuccess = (event) => {
+                    const messages = event.target.result;
+                    messages.forEach(msg => store.delete(msg.chatId));
+                };
+
+                tx.oncomplete = () => resolve("Chats cleared for room: " + roomId);
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Clear Entire Database (Logout)
+        async function clearDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.deleteDatabase(DB_NAME);
+
+                request.onsuccess = () => resolve("Database cleared successfully");
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+
+
+
+
+        // async function getRooms1() {
+        //     const db = await openDB();
+        //     const tx = db.transaction("rooms", "readonly");
+        //     const store = tx.objectStore("rooms");
+        //     return await store.getAll();  // Directly return the list of rooms
+        // }
+
+        // async function fetchRooms() {
+        //     try {
+        //         const rooms = await getRooms1();
+        //         console.log("Rooms:", JSON.stringify(rooms, null, 2)); // Clean output
+        //         return rooms;
+        //     } catch (error) {
+        //         console.error("Error fetching rooms:", error);
+        //         return []; // Return an empty array if there's an error
+        //     }
+        // }
+
+        async function getRooms() {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readonly");
+                const store = tx.objectStore("rooms");
+                const request = store.getAll();
+
+                request.onsuccess = () => resolve(request.result);  // Properly return result
+                request.onerror = (event) => reject(event.target.error); // Properly handle errors
+            });
+        }
+
+        // Function to get room details from IndexedDB
+        async function getRoomDetailsFromDB(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readonly");
+                const store = tx.objectStore("rooms");
+                const request = store.get(roomId);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        async function logRooms() {
+            const db = await openDB();
+            const tx = db.transaction("rooms", "readonly");
+            const store = tx.objectStore("rooms");
+            const request = store.getAll();
+
+            request.onsuccess = () => console.log("Rooms Data:", request.result);
+            request.onerror = (event) => console.error("Error fetching rooms:", event.target.error);
+        }
+
+        async function logMessagesByRoom(roomId) {
+            const db = await openDB();
+            const tx = db.transaction("messages", "readonly");
+            const store = tx.objectStore("messages");
+            const index = store.index("roomId"); // Using the "roomId" index
+            const request = index.getAll(roomId);
+
+            request.onsuccess = () => console.log(`💬 Messages for Room (${roomId}):`, request.result);
+            request.onerror = (event) => console.error(`❌ Error fetching messages for Room (${roomId}):`, event.target.error);
+        }
+
+        async function getMessagesByRoom(roomId) {
+            const db = await openDB();
+            const tx = db.transaction("messages", "readonly");
+            const store = tx.objectStore("messages");
+            const index = store.index("roomId"); // Using the "roomId" index
+            const request = index.getAll(roomId);
+
+            return new Promise((resolve, reject) => {
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(`❌ Error fetching messages for Room (${roomId}): ${event.target.error}`);
+            });
+        }
+
+
+        async function logMessages() {
+            const db = await openDB();
+            const tx = db.transaction("messages", "readonly");
+            const store = tx.objectStore("messages");
+            const request = store.getAll();
+
+            request.onsuccess = () => console.log("💬 Messages Collection:", request.result);
+            request.onerror = (event) => console.error("❌ Error fetching messages:", event.target.error);
+        }
+
+        async function getRoomDetails(roomId) {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onsuccess = (event) => {
+                    const db = event.target.result;
+                    const transaction = db.transaction("rooms", "readonly");
+                    const store = transaction.objectStore("rooms");
+                    const getRequest = store.get(roomId);
+
+                    getRequest.onsuccess = () => {
+                        if (getRequest.result) {
+                            resolve(getRequest.result); // Returns the room details
+                        } else {
+                            reject("Room not found");
+                        }
+                    };
+
+                    getRequest.onerror = () => reject("Error fetching room details");
+                };
+
+                request.onerror = () => reject("Error opening IndexedDB");
+            });
+        }
+
+        async function updateRoomName(roomId, newRoomName) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction("rooms", "readwrite");
+                const store = transaction.objectStore("rooms");
+                const getRequest = store.get(roomId);
+
+                getRequest.onsuccess = () => {
+                    if (getRequest.result) {
+                        let roomData = getRequest.result;
+                        roomData.roomName = newRoomName; // Update the name
+
+                        const updateRequest = store.put(roomData);
+
+                        updateRequest.onsuccess = () => resolve("Room name updated successfully");
+                        updateRequest.onerror = () => reject("Failed to update room name");
+                    } else {
+                        reject("Room not found");
+                    }
+                };
+
+                getRequest.onerror = () => reject("Error fetching room details");
+            });
+        }
+
+        async function updateRoomBackgroundUrl(roomId, newBackgroundUrl) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction("rooms", "readwrite");
+                const store = transaction.objectStore("rooms");
+                const getRequest = store.get(roomId);
+
+                getRequest.onsuccess = () => {
+                    if (getRequest.result) {
+                        let roomData = getRequest.result;
+                        roomData.roomBackgroundUrl = newBackgroundUrl; // Update the background URL
+
+                        const updateRequest = store.put(roomData);
+
+                        updateRequest.onsuccess = () => resolve("Room background updated successfully");
+                        updateRequest.onerror = () => reject("Failed to update room background");
+                    } else {
+                        reject("Room not found");
+                    }
+                };
+
+                getRequest.onerror = () => reject("Error fetching room details");
+            });
+        }
+
+        async function removeUserFromAllRooms(userId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const getAllRequest = store.getAll();
+
+                getAllRequest.onsuccess = () => {
+                    const rooms = getAllRequest.result;
+                    let roomsUpdated = 0;
+
+                    console.log(rooms);
+                    rooms.forEach(room => {
+                        console.log(room);
+                        if (room.members.some(member => member.userId === userId)) {
+                            console.log("The user is in the room...");
+
+                            // Remove the user from members list
+                            room.members = room.members.filter(member => member.userId !== userId);
+
+                            // If the room still has members, update it; otherwise, delete the room
+                            if (room.members.length > 0) {
+                                store.put(room);
+                            } else {
+                                store.delete(room.roomId);
+                            }
+
+                            roomsUpdated++;
+                        }
+
+                    });
+
+                    tx.oncomplete = () => resolve(`${roomsUpdated} rooms updated.`);
+                };
+
+                getAllRequest.onerror = () => reject("Error fetching rooms");
+            });
+        }
+
+        async function removeMemberFromRoom(roomId, userId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const getRequest = store.get(roomId);
+
+                getRequest.onsuccess = () => {
+                    const room = getRequest.result;
+                    if (!room) return reject("Room not found");
+
+                    // Remove the user from the members array
+                    room.members = room.members.filter(member => member.userId !== userId);
+
+                    // Update the room if members exist, otherwise delete the room
+                    if (room.members.length > 0) {
+                        store.put(room);
+                    } else {
+                        store.delete(roomId);
+                    }
+
+                    tx.oncomplete = () => resolve("Member removed successfully");
+                };
+
+                getRequest.onerror = () => reject("Error fetching room details");
+            });
+        }
+
+        async function addNewRoomMember(data) {
+            console.log("Updating room members with new user:", data);
+
+            const { roomId, userId, userName, userAvatar } = data;
+
+            try {
+                const db = await openDB();
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                // Fetch the room details
+                const roomRequest = store.get(roomId);
+
+                roomRequest.onsuccess = async () => {
+                    let room = roomRequest.result;
+                    if (room) {
+                        // Check if user already exists in the members list
+                        const userExists = room.members.some(member => member.userId === userId);
+
+                        if (!userExists) {
+                            // Add new user to members list
+                            room.members.push({ userId, userName, userAvatar });
+
+                            // Save updated room object back to IndexedDB
+                            const updateRequest = store.put(room);
+
+                            updateRequest.onsuccess = () => {
+                                console.log(`User ${userId} added to room ${roomId}`);
+                            };
+
+                            updateRequest.onerror = (event) => {
+                                console.error("Error updating room members:", event.target.error);
+                            };
+                        } else {
+                            console.log("User already exists in the room.");
+                        }
+                    } else {
+                        console.warn("Room not found in IndexedDB.");
+                    }
+                };
+
+                roomRequest.onerror = (event) => {
+                    console.error("Error fetching room:", event.target.error);
+                };
+            } catch (error) {
+                console.error("Error updating room members:", error);
+            }
+        }
+
+
+
+
+
+
+
+
+
+        // function displayChats() {
+        //     const roomId = getRoomIdFromURL(); // Extract roomId from URL
+        //     const chats = getChatsByRoom(roomId); // Fetch chats for the room
+
+        //     // Sort chats by chatTime in ascending order
+        //     chats.sort((a, b) => a.chatTime.localeCompare(b.chatTime));
+
+        //     const chatContainer = document.querySelector("main>div:first-of-type"); // Ensure you have a div with this ID
+        //     chatContainer.innerHTML = ""; // Clear previous chats
+
+        //     const currentUserId = localStorage.getItem("userId"); // Get current user ID
+
+        //     chats.forEach(chat => {
+        //         let chatItem = document.createElement("div");
+
+        //         if (chat.senderId === currentUserId) {
+        //             // Sent message
+        //             chatItem.className = "chat-sent";
+        //             chatItem.innerHTML = `
+        //         <p class="chat-content">${chat.chatContent}</p>
+        //         <p class="chat-details">
+        //             <span>${chat.chatTime}</span>
+        //             <span>${chat.chatStatus}</span>
+        //         </p>
+        //     `;
+        //         } else {
+        //             // Received message
+        //             chatItem.className = "chat-received";
+        //             chatItem.innerHTML = `
+        //         <p class="sender-name">${chat.senderName}</p>
+        //         <p class="chat-content">${chat.chatContent}</p>
+        //         <p class="chat-time">${chat.chatTime}</p>
+        //     `;
+        //         }
+
+        //         chatContainer.appendChild(chatItem);
+        //     });
+        // }
+
+        function getRoomIdFromURL() {
+            const urlParts = window.location.pathname.split("/"); // Split URL by "/"
+            return urlParts[urlParts.length - 2]; // Extract the second last segment (roomId)
+        }
+
+
+        async function updateRoomInfo() {
+            const roomId = getRoomIdFromURL();
+
+            const roomDetails = await getRoomDetails(roomId);
+
+            document.querySelector(".roomName").innerText = roomDetails.roomName;
+            document.querySelector(".room-details .avatar-div").style.backgroundImage = `url("${roomDetails.roomBackgroundUrl}")`;
+        }
+
+        async function displayMembers() {
+            const roomId = getRoomIdFromURL();
+            const roomDetails = await getRoomDetails(roomId);
+
+            console.log(roomDetails.members);
+
+            const members = roomDetails.members;
+            const membersDiv = document.querySelector(".members");
+            membersDiv.innerHTML = '';
+
+            members.forEach((member) => {
+
+            });
+            members.forEach((member) => {
+                const chatItem = document.createElement("div");
+                chatItem.className = "chat-item";
+
+                chatItem.innerHTML = `
+        <div class="chat-avatar avatar-div" style="background-image: url('${member.avatarUrl || member.userAvatar || localStorage.getItem("userAvatar")}');"></div>
+        <div class="chat-details">
+            <div class="chat-name">${member.userName}</div>
+        </div>
+    `;
+
+                membersDiv.appendChild(chatItem);
+            });
+
+        }
+
+        updateRoomInfo();
+        displayMembers();
+
+
+        document.querySelector(".leave-btn").addEventListener("click", (evt) => {
+            evt.preventDefault();
+
+            const roomId = getRoomIdFromURL();
+
+            leaveRoom(roomId);
+            clearChatsByRoom(roomId);
+
+            const data = {
+                roomId: roomId,
+                userId: localStorage.getItem("userId")
+            };
+
+            socket.emit("leavingRoom", data);
+
+            window.location.replace("http://172.21.88.12:8000/user");
+        });
+
+
+    </script>
+</body>
+
+</html>

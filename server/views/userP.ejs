@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #484755;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            height: 80px;
+            background: #23232b;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header>div {
+            height: 90%;
+            aspect-ratio: 1/1;
+            border: 1px solid white;
+
+
+
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .avatar-div {
+            background-image: url('https://th.bing.com/th/id/OIP.frk9oaRCV-aXQdxzo8ZC8gHaHa?rs=1&pid=ImgDetMain');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+
+
+        .header>span:last-of-type {
+            padding-right: 5px;
+        }
+
+        .icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            width: 100%;
+
+
+            background-image: url('https://th.bing.com/th/id/OIP.frk9oaRCV-aXQdxzo8ZC8gHaHa?rs=1&pid=ImgDetMain');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .chat-item {
+            width: 98%;
+            margin-left: 1%;
+            margin-top: 1%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #484848;
+            cursor: pointer;
+            transition: background 0.3s;
+            background-color: #333;
+            border-radius: 10px;
+        }
+
+        .chat-item:hover {
+            background-color: #333;
+        }
+
+        .chat-avatar {
+            height: 100%;
+            border-radius: 50%;
+            margin-right: 5%;
+            background-color: gray;
+            aspect-ratio: 1/1;
+
+            background-image: url('https://th.bing.com/th/id/OIP.frk9oaRCV-aXQdxzo8ZC8gHaHa?rs=1&pid=ImgDetMain');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+
+        }
+
+        .chat-details {
+            flex: 1;
+        }
+
+        .chat-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: wheat;
+
+            padding: 5px 0px;
+        }
+
+        .chat-message {
+            font-size: 0.9em;
+            color: #bbb;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .message {
+            background: white;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+
+        .message.right {
+            background: #dcf8c6;
+            align-self: flex-end;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            width: 80%;
+            height: 100vh;
+            background-color: #3a393d;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            padding: 20px;
+        }
+
+        #leftSidebar {}
+
+        #leftSidebar>button:first-of-type {
+            all: unset;
+            aspect-ratio: 1/1;
+            width: 12.5%;
+            font-size: 1.75rem;
+        }
+
+        #leftSidebar>div {
+            width: 50%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-left: 25%;
+            background-image: url('https://th.bing.com/th/id/OIP.frk9oaRCV-aXQdxzo8ZC8gHaHa?rs=1&pid=ImgDetMain');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+        #leftSidebar>p {
+            width: 100%;
+            font-size: 1.2rem;
+            padding: 20px 0px;
+            color: white;
+            text-align: center;
+        }
+
+        #leftSidebar>button:last-of-type {
+            width: 50%;
+            margin-top: 25%;
+            margin-left: 25%;
+            border: none;
+            padding: 10px;
+            background: rgb(202, 0, 0);
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #rightSidebar {}
+
+        #rightSidebar>button:first-of-type {
+            all: unset;
+            aspect-ratio: 1/1;
+            width: 12.5%;
+            font-size: 1.75rem;
+        }
+
+        #rightSidebar>h3 {
+            font-size: 1.5rem;
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 20px 0px;
+        }
+
+        #rightSidebar>input {
+            all: unset;
+            width: 80%;
+            border: 1px solid rgb(147, 147, 147);
+            margin-right: 10px;
+            margin-left: calc(10% - 10px);
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        #rightSidebar>button:last-of-type {
+            width: 50%;
+            margin-top: 10px;
+            margin-left: 25%;
+            border: none;
+            padding: 10px;
+            background: rgb(202, 0, 0);
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .sidebar.right {
+            right: 0;
+            transform: translateX(100%);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div onclick="toggleSidebar('left')" class="avatar-div">
+
+        </div>
+        <!-- <span class="icon" onclick="toggleSidebar('left')">&#9776;</span> -->
+        <h2>Chat</h2>
+        <span class="icon" onclick="toggleSidebar('right')"><i class="fa-solid fa-plus"></i></span>
+
+    </div>
+
+    <div class="chat-container">
+        <!-- <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-item" onclick="openChat('electrical4thsem')">
+            <div class="chat-avatar"></div>
+            <div class="chat-details">
+                <div class="chat-name">Electrical 4th Semester</div>
+                <div class="chat-message">
+                    <p>Ansh Pachauri: E3 & E4</p>
+                    <p>19:39</p>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <div id="leftSidebar" class="sidebar">
+        <button onclick="toggleSidebar('left')"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="profile-avatar-div">
+
+        </div>
+        <p>John Doe</p>
+        <button class="logout-btn">End Chat</button>
+    </div>
+
+    <div id="rightSidebar" class="sidebar right">
+        <button onclick="toggleSidebar('right')"><i class="fa-solid fa-arrow-right"></i></button>
+        <h3>Join a Room</h3>
+        <input class="room-code" type="text" placeholder="Enter Room Code">
+        <br>
+        <button class="join-btn">Join</button>
+    </div>
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"
+        integrity="sha512-8BHxHDLsOHx+flIrQ0DrZcea7MkHqRU5GbTHmbdzMRnAaoCIkZ97PqZcXJkKZckMMhqfoeaJE+DNUVuyoQsO3Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+        const socket = io("http://172.21.88.12:8000"); // Change this if using a deployed server
+
+
+        socket.on("connect", async () => {
+            console.log("Connected to WebSocket server");
+
+            const rooms = await getRooms(); // Fetch stored rooms
+            console.log(socket.id);
+            console.log("List of rooms ...", rooms);
+
+            const data = {
+                userId: localStorage.getItem("userId"),
+                socketId: socket.id,
+                roomList: rooms,
+                userAvatar: localStorage.getItem("userAvatar")
+            };
+
+            socket.emit("userJoin", data);
+        });
+
+        socket.on("newUserJoin", (data) => {
+            console.log(data);
+
+            //Add the user to db at all the places
+            addNewRoomMember(data);
+
+
+            //Sending the the room info so that the new user update its db
+
+
+        });
+
+        //This is recieved by all the new comer's for setting the room info in there db, all the previous info of the room
+        socket.on("joinedRoomInfo", (data) => {
+            console.log("the recieved room details are : ", data);
+            const { roomId, roomDetails } = data;
+            console.log(`Received room details for room ${roomId}:`, roomDetails);
+
+            // //Adding the room entry to the db
+            // joinRoom(roomId, `${localStorage.getItem("userName")}'s New room`, roomBackgroundUrl, [{
+            //     userId: `${localStorage.getItem("userId")}`,
+            //     userName: `${localStorage.getItem("userName")}`,
+            //     avatarUrl: `${localStorage.getItem("userAvatar")}`
+            // }]);
+
+            updateRoomInfo(roomDetails);
+            window.location.reload();
+
+        });
+
+        //Server requesting for room details ...
+        socket.on("requestRoomData", async ({ roomId, requestingUser }) => {
+            console.log(`Received request to send room data for room ${roomId}`);
+
+            // Fetch room details from IndexedDB
+            const roomDetails = await getRoomDetailsFromDB(roomId);
+            console.log(roomDetails);
+            if (roomDetails) {
+                socket.emit("roomDataFromExistingSocket", {
+                    roomId,
+                    roomDetails,
+                    requestingUser: requestingUser // Send back to requesting socket
+                });
+            }
+        });
+
+        socket.on("message", (data) => {
+            console.log("A message recieved : ", data);
+            const { chatId, roomId, chatTime, chatContent, senderId, senderName, senderAvatar } = data;
+
+
+            //Make some changes in the respective roomId div like some unread new messages came
+
+
+
+
+            addChat(chatId, roomId, chatTime, chatContent, "delivered", senderName, "recieved");
+        });
+
+        socket.on("roomNameUpdate", (data) => {
+            console.log("The new room is : ", data);
+
+            roomNameUpdateLive(data.roomId, data.newName);
+            updateRoomName(data.roomId, data.newName);
+        });
+
+        socket.on("updateRoomBackground", (data) => {
+            console.log("The new room abckground url dat is : ", data);
+            updateRoomBackgroundUrl(data.roomId, data.newUrl);
+            roomBackgroundUpdateLive(data.roomId, data.newUrl);
+        });
+
+        socket.on("leavingRoom", (data) => {
+            console.log("the user leaving req data is : ", data);
+
+            removeMemberFromRoom(data.roomId, data.userId);
+        });
+
+        socket.on("leavingRooms", (data) => {
+            console.log("The leaving rooms req came with data : ", data);
+            removeUserFromAllRooms(data.userId);
+        });
+
+
+
+
+        function roomBackgroundUpdateLive(roomId, newUrl) {
+            //Instead of finding the div for same roomId and update its roomName for now just refresh the page, so that the db changes can reflect
+            window.location.reload();
+        }
+
+        function roomNameUpdateLive(roomId, newName) {
+            //Instead of finding the div for same roomId and update its roomName for now just refresh the page, so that the db changes can reflect
+            window.location.reload();
+        }
+
+        async function updateRoomInfo(roomDetails) {
+            const { roomId, roomName, roomBackgroundUrl, joinedTime, members } = roomDetails;
+
+            // Get the database instance
+            const db = await openDB();
+
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                // Check if room already exists
+                const request = store.get(roomId);
+
+                request.onsuccess = async () => {
+                    let roomData = request.result;
+
+                    if (!roomData) {
+                        // Room does not exist, create a new entry
+                        roomData = { roomId, roomName, roomBackgroundUrl, joinedTime, members };
+                    } else {
+                        // Room exists, update its details
+                        roomData.roomName = roomName;
+                        roomData.roomBackgroundUrl = roomBackgroundUrl;
+                        roomData.joinedTime = joinedTime;
+
+                        // Merge new members without duplicates
+                        members.forEach(member => {
+                            const exists = roomData.members.some(m => m.userId === member.userId);
+                            if (!exists) {
+                                roomData.members.push(member);
+                            }
+                        });
+                    }
+
+                    // Update the room entry
+                    const updateRequest = store.put(roomData);
+
+                    updateRequest.onsuccess = () => {
+                        console.log(`Room ${roomId} updated successfully.`);
+                        resolve(roomData);
+                    };
+
+                    updateRequest.onerror = (event) => reject(event.target.error);
+                };
+
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+
+
+
+
+        async function addNewRoomMember(data) {
+            console.log("Updating room members with new user:", data);
+
+            const { roomId, userId, userName, userAvatar } = data;
+
+            try {
+                const db = await openDB();
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                // Fetch the room details
+                const roomRequest = store.get(roomId);
+
+                roomRequest.onsuccess = async () => {
+                    let room = roomRequest.result;
+                    if (room) {
+                        // Check if user already exists in the members list
+                        const userExists = room.members.some(member => member.userId === userId);
+
+                        if (!userExists) {
+                            // Add new user to members list
+                            room.members.push({ userId, userName, userAvatar });
+
+                            // Save updated room object back to IndexedDB
+                            const updateRequest = store.put(room);
+
+                            updateRequest.onsuccess = () => {
+                                console.log(`User ${userId} added to room ${roomId}`);
+                            };
+
+                            updateRequest.onerror = (event) => {
+                                console.error("Error updating room members:", event.target.error);
+                            };
+                        } else {
+                            console.log("User already exists in the room.");
+                        }
+                    } else {
+                        console.warn("Room not found in IndexedDB.");
+                    }
+                };
+
+                roomRequest.onerror = (event) => {
+                    console.error("Error fetching room:", event.target.error);
+                };
+            } catch (error) {
+                console.error("Error updating room members:", error);
+            }
+        }
+
+        async function addNewRoomMembersBulk(roomId, members) {
+            console.log(`Updating room ${roomId} with new members:`, members);
+
+            try {
+                const db = await openDB();
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                // Fetch the room details
+                const roomRequest = store.get(roomId);
+
+                roomRequest.onsuccess = async () => {
+                    let room = roomRequest.result;
+                    if (room) {
+                        // Filter out already existing users
+                        const existingUserIds = new Set(room.members.map(member => member.userId));
+                        const newMembers = members.filter(member => !existingUserIds.has(member.userId));
+
+                        if (newMembers.length > 0) {
+                            // Add new users to the members list
+                            room.members.push(...newMembers);
+
+                            // Save updated room object back to IndexedDB
+                            const updateRequest = store.put(room);
+
+                            updateRequest.onsuccess = () => {
+                                console.log(`Added ${newMembers.length} new members to room ${roomId}`);
+                            };
+
+                            updateRequest.onerror = (event) => {
+                                console.error("Error updating room members:", event.target.error);
+                            };
+                        } else {
+                            console.log("No new members to add. All users already exist in the room.");
+                        }
+                    } else {
+                        console.warn("Room not found in IndexedDB.");
+                    }
+                };
+
+                roomRequest.onerror = (event) => {
+                    console.error("Error fetching room:", event.target.error);
+                };
+            } catch (error) {
+                console.error("Error updating room members:", error);
+            }
+        }
+
+
+
+
+
+        function adjustHeight() {
+            document.querySelector("body").style.height = `${window.innerHeight}px`;
+        }
+
+        window.addEventListener("resize", adjustHeight);
+        window.addEventListener("load", adjustHeight);
+
+
+        if (!localStorage.getItem("userName") || !localStorage.getItem("userId") || !localStorage.getItem("userAvatar")) {
+            window.location.replace("http://172.21.88.12:8000/");
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("Page has fully loaded!");
+
+            // Your code here
+            // if (!localStorage.getItem("userName") || !localStorage.getItem("userId") || !localStorage.getItem("userAvatar")) {
+            //     window.location.replace("http://172.22.55.84:8000/");
+            // }
+        });
+
+        function toggleSidebar(side) {
+            const sidebar = side === 'left' ? document.getElementById('leftSidebar') : document.getElementById('rightSidebar');
+            sidebar.classList.toggle('active');
+        }
+
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener("touchstart", (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.addEventListener("touchend", (e) => {
+            touchEndX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            let leftSidebar = document.getElementById("leftSidebar");
+            let rightSidebar = document.getElementById("rightSidebar");
+
+            let swipeDistance = touchEndX - touchStartX;
+
+            if (swipeDistance < -50 && leftSidebar.classList.contains("active")) {
+                // Swiped left, close left sidebar
+                toggleSidebar('left');
+            } else if (swipeDistance > 50 && rightSidebar.classList.contains("active")) {
+                // Swiped right, close right sidebar
+                toggleSidebar('right');
+            }
+        }
+
+
+
+        const profileAvatarDiv = document.querySelector(".profile-avatar-div");
+        const leftSidebar = document.getElementById("leftSidebar");
+        const avatarDiv = document.querySelector(".avatar-div");
+        const endChatBtn = document.querySelector(".logout-btn");
+        const joinBtn = document.querySelector(".join-btn");
+
+        avatarDiv.style.backgroundImage = `url('${localStorage.getItem("userAvatar")}')`;
+        document.querySelector(".chat-container").style.backgroundImage = `url(${localStorage.getItem("userAvatar")})`;
+        profileAvatarDiv.style.backgroundImage = `url('${localStorage.getItem("userAvatar")}')`;
+        document.querySelector("#leftSidebar p").innerText = localStorage.getItem("userName");
+
+
+        const backgrounds = [
+            "https://wallpapercave.com/wp/wp6988971.jpg",
+            "https://www.techgrapple.com/wp-content/uploads/2016/08/beautiful-sky-whatsapp-chat-background.jpg",
+            "https://wallpapercave.com/wp/wp6988830.jpg",
+            "https://wallpapercave.com/wp/wp4892368.jpg",
+            "https://www.techgrapple.com/wp/wp6028948.jpg",
+            "https://preview.redd.it/vvqgcdp39x551.jpg?auto=webp&s=9736ebe43d68a156afe5f22e294d7f4b757f7686",
+            "https://th.bing.com/th/id/OIP.GlZRCiKdvq64dmxhKkMZ8wHaQD?rs=1&pid=ImgDetMain",
+            "https://wallpapercave.com/wp/wp6989074.jpg",
+            "https://th.bing.com/th/id/OIP._JBlnpE2k_GIxguPJu45LgHaQD?rs=1&pid=ImgDetMain"
+        ];
+
+        let currentIndex = 0;
+
+        // Function to update avatar background
+        function updateAvatar() {
+            avatarDiv.style.backgroundImage = `url('${localStorage.getItem("userAvatar")}')`;
+            document.querySelector(".chat-container").style.backgroundImage = `url(${localStorage.getItem("userAvatar")})`;
+            profileAvatarDiv.style.backgroundImage = `url('${localStorage.getItem("userAvatar")}')`;
+
+        }
+
+        // Function to check if leftSidebar is active
+        function isLeftSidebarActive() {
+            return leftSidebar.classList.contains("active");
+        }
+
+        // Click event listener for avatar-div
+        profileAvatarDiv.addEventListener("click", () => {
+            if (isLeftSidebarActive()) {
+                currentIndex = (currentIndex + 1) % backgrounds.length;
+                const newUrl = backgrounds[currentIndex];
+                localStorage.setItem("userAvatar", newUrl)
+                updateAvatar();
+            }
+        });
+
+        // // Initialize first avatar
+        // updateAvatar();
+
+        endChatBtn.addEventListener("click", (evt) => {
+            evt.preventDefault();
+
+            const data = {
+                userId: localStorage.getItem("userId")
+            };
+            socket.emit("leavingRooms", data);
+            localStorage.clear();
+            clearAllDatabases(); // Clears all databases
+            window.location.replace("http://172.21.88.12:8000/user");
+        });
+
+
+        joinBtn.addEventListener("click", (evt) => {
+            evt.preventDefault();
+
+            const roomId = document.querySelector(".room-code").value;
+
+            if (roomId.trim() !== "") {
+                console.log("Joining room : ", roomId);
+
+                //Send the ws request fo rk=joining the room
+
+                const data = {
+                    userId: localStorage.getItem("userId"),
+                    userName: localStorage.getItem("userName"),
+                    roomId: roomId,
+                    userAvatar: localStorage.getItem("userAvatar")
+                };
+
+                socket.emit("joinRoom", data);
+                //Adding the room entry to the db
+                joinRoom(roomId, `${localStorage.getItem("userName")}'s New room`, localStorage.getItem("userAvatar"), [{
+                    userId: `${localStorage.getItem("userId")}`,
+                    userName: `${localStorage.getItem("userName")}`,
+                    avatarUrl: `${localStorage.getItem("userAvatar")}`
+                }]);
+
+                // window.location.reload();
+
+            } else {
+                alert("Enter a valid room code");
+            }
+        });
+
+
+        function shortLastMessage(text, maxLength = 20) {
+            return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+        }
+
+
+        async function populateChatContainer() {
+            const rooms = await getRooms(); // Fetch stored rooms
+            const chatContainer = document.querySelector(".chat-container");
+            chatContainer.innerHTML = ""; // Clear previous content
+
+            console.log(rooms);
+
+            for (const room of rooms) {
+                const chatItem = document.createElement("div");
+                chatItem.classList.add("chat-item");
+                chatItem.classList.add(`chat-${room.roomId}`);//can be used for setting chat avatars 
+                chatItem.setAttribute("onclick", `openChat('${room.roomId}')`);
+
+                console.log(room);
+
+                // Fetch last message for the room
+                const messages = await getChatsByRoom(room.roomId);
+                let lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+
+
+
+                //         chatItem.innerHTML = `
+                //     <div class="chat-avatar"></div>
+                //     <div class="chat-details">
+                //         <div class="chat-name">${room.roomName}</div>
+                //         <div class="chat-message">
+                //             <p>${lastMessage ? lastMessage.senderName : "Unknown"}: ${lastMessage ? shortLastMessage(lastMessage.chatContent, 5) : "No messages yet"}</p>
+                //             <p>${lastMessage ? new Date(lastMessage.chatTime).toLocaleTimeString() : ""}</p>
+                //         </div>
+                //     </div>
+                // `;
+
+                chatItem.innerHTML = `
+    <div class="chat-avatar" style="background-image: url('${room.roomBackgroundUrl || localStorage.getItem("userAvatar")}');"></div>
+    <div class="chat-details">
+        <div class="chat-name">${room.roomName}</div>
+        <div class="chat-message">
+            <p>${lastMessage ? lastMessage.senderName : "Unknown"}: ${lastMessage ? shortLastMessage(lastMessage.chatContent, 5) : "No messages yet"}</p>
+            <p>${lastMessage ? new Date(lastMessage.chatTime).toLocaleTimeString() : ""}</p>
+        </div>
+    </div>
+`;
+
+
+
+                chatContainer.appendChild(chatItem);
+            }
+        }
+
+
+        function openChat(roomId) {
+            const url = `http://172.21.88.12:8000/user/${roomId}`;
+
+            window.location.href = url;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function clearAllDatabases() {
+            indexedDB.databases().then(databases => {
+                databases.forEach(db => {
+                    indexedDB.deleteDatabase(db.name);
+                    console.log(`Deleted database: ${db.name}`);
+                });
+            }).catch(error => console.error("Error clearing databases:", error));
+        }
+
+
+
+
+
+
+        const DB_NAME = "chatApp";
+        const DB_VERSION = 1;
+        let db;
+
+        console.log(DB_NAME);
+
+        // Open IndexedDB
+        function openDB() {
+            console.log("Opening or creating the indexeddb's ....");
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    let db = event.target.result;
+
+                    if (!db.objectStoreNames.contains("rooms")) {
+                        const roomsStore = db.createObjectStore("rooms", { keyPath: "roomId" });
+                    }
+
+                    if (!db.objectStoreNames.contains("messages")) {
+                        const messagesStore = db.createObjectStore("messages", { keyPath: "chatId" });
+                        messagesStore.createIndex("roomId", "roomId", { unique: false });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    console.log("Success ...");
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+
+
+
+
+
+        // Add or Join a Room
+        async function joinRoom(roomId, roomName, roomBackgroundUrl, members) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                store.put({ roomId, roomName, roomBackgroundUrl, joinedTime: new Date().toISOString(), members });
+
+                tx.oncomplete = () => resolve("Room joined successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Add a chat message
+        async function addChat(chatId, roomId, chatTime, chatContent, chatStatus, senderName, chatType) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readwrite");
+                const store = tx.objectStore("messages");
+
+                store.put({ chatId, roomId, chatTime, chatContent, chatStatus, senderName, chatType });
+
+                tx.oncomplete = () => resolve("Chat added successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Get all chats from a specific room
+        async function getChatsByRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readonly");
+                const store = tx.objectStore("messages");
+                const index = store.index("roomId");
+                const request = index.getAll(roomId);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Leave a Room (Remove it from IndexedDB)
+        async function leaveRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                store.delete(roomId);
+
+                tx.oncomplete = () => resolve("Room left successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Clear all chats in a specific room
+        async function clearChatsByRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readwrite");
+                const store = tx.objectStore("messages");
+                const index = store.index("roomId");
+
+                index.getAll(roomId).onsuccess = (event) => {
+                    const messages = event.target.result;
+                    messages.forEach(msg => store.delete(msg.chatId));
+                };
+
+                tx.oncomplete = () => resolve("Chats cleared for room: " + roomId);
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Clear Entire Database (Logout)
+        async function clearDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.deleteDatabase(DB_NAME);
+
+                request.onsuccess = () => resolve("Database cleared successfully");
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+
+
+
+
+        // async function getRooms1() {
+        //     const db = await openDB();
+        //     const tx = db.transaction("rooms", "readonly");
+        //     const store = tx.objectStore("rooms");
+        //     return await store.getAll();  // Directly return the list of rooms
+        // }
+
+        // async function fetchRooms() {
+        //     try {
+        //         const rooms = await getRooms1();
+        //         console.log("Rooms:", JSON.stringify(rooms, null, 2)); // Clean output
+        //         return rooms;
+        //     } catch (error) {
+        //         console.error("Error fetching rooms:", error);
+        //         return []; // Return an empty array if there's an error
+        //     }
+        // }
+
+        async function getRooms() {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readonly");
+                const store = tx.objectStore("rooms");
+                const request = store.getAll();
+
+                request.onsuccess = () => resolve(request.result);  // Properly return result
+                request.onerror = (event) => reject(event.target.error); // Properly handle errors
+            });
+        }
+
+
+        async function logRooms() {
+            const db = await openDB();
+            const tx = db.transaction("rooms", "readonly");
+            const store = tx.objectStore("rooms");
+            const request = store.getAll();
+
+            request.onsuccess = () => console.log("Rooms Data:", request.result);
+            request.onerror = (event) => console.error("Error fetching rooms:", event.target.error);
+        }
+
+        async function logMessagesByRoom(roomId) {
+            const db = await openDB();
+            const tx = db.transaction("messages", "readonly");
+            const store = tx.objectStore("messages");
+            const index = store.index("roomId"); // Using the "roomId" index
+            const request = index.getAll(roomId);
+
+            request.onsuccess = () => console.log(`💬 Messages for Room (${roomId}):`, request.result);
+            request.onerror = (event) => console.error(`❌ Error fetching messages for Room (${roomId}):`, event.target.error);
+        }
+
+        async function logMessages() {
+            const db = await openDB();
+            const tx = db.transaction("messages", "readonly");
+            const store = tx.objectStore("messages");
+            const request = store.getAll();
+
+            request.onsuccess = () => console.log("💬 Messages Collection:", request.result);
+            request.onerror = (event) => console.error("❌ Error fetching messages:", event.target.error);
+        }
+
+        // Function to get room details from IndexedDB
+        async function getRoomDetailsFromDB(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readonly");
+                const store = tx.objectStore("rooms");
+                const request = store.get(roomId);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        async function updateRoomName(roomId, newRoomName) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction("rooms", "readwrite");
+                const store = transaction.objectStore("rooms");
+                const getRequest = store.get(roomId);
+
+                getRequest.onsuccess = () => {
+                    if (getRequest.result) {
+                        let roomData = getRequest.result;
+                        roomData.roomName = newRoomName; // Update the name
+
+                        const updateRequest = store.put(roomData);
+
+                        updateRequest.onsuccess = () => resolve("Room name updated successfully");
+                        updateRequest.onerror = () => reject("Failed to update room name");
+                    } else {
+                        reject("Room not found");
+                    }
+                };
+
+                getRequest.onerror = () => reject("Error fetching room details");
+            });
+        }
+
+        async function updateRoomBackgroundUrl(roomId, newBackgroundUrl) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction("rooms", "readwrite");
+                const store = transaction.objectStore("rooms");
+                const getRequest = store.get(roomId);
+
+                getRequest.onsuccess = () => {
+                    if (getRequest.result) {
+                        let roomData = getRequest.result;
+                        roomData.roomBackgroundUrl = newBackgroundUrl; // Update the background URL
+
+                        const updateRequest = store.put(roomData);
+
+                        updateRequest.onsuccess = () => resolve("Room background updated successfully");
+                        updateRequest.onerror = () => reject("Failed to update room background");
+                    } else {
+                        reject("Room not found");
+                    }
+                };
+
+                getRequest.onerror = () => reject("Error fetching room details");
+            });
+        }
+
+        async function removeUserFromAllRooms(userId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const getAllRequest = store.getAll();
+
+                getAllRequest.onsuccess = () => {
+                    const rooms = getAllRequest.result;
+                    let roomsUpdated = 0;
+
+                    console.log(rooms);
+                    rooms.forEach(room => {
+                        console.log(room);
+                        if (room.members.some(member => member.userId === userId)) {
+                            console.log("The user is in the room...");
+
+                            // Remove the user from members list
+                            room.members = room.members.filter(member => member.userId !== userId);
+
+                            // If the room still has members, update it; otherwise, delete the room
+                            if (room.members.length > 0) {
+                                store.put(room);
+                            } else {
+                                store.delete(room.roomId);
+                            }
+
+                            roomsUpdated++;
+                        }
+
+                    });
+
+                    tx.oncomplete = () => resolve(`${roomsUpdated} rooms updated.`);
+                };
+
+                getAllRequest.onerror = () => reject("Error fetching rooms");
+            });
+        }
+
+        async function removeMemberFromRoom(roomId, userId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+                const getRequest = store.get(roomId);
+
+                getRequest.onsuccess = () => {
+                    const room = getRequest.result;
+                    if (!room) return reject("Room not found");
+
+                    // Remove the user from the members array
+                    room.members = room.members.filter(member => member.userId !== userId);
+
+                    // Update the room if members exist, otherwise delete the room
+                    if (room.members.length > 0) {
+                        store.put(room);
+                    } else {
+                        store.delete(roomId);
+                    }
+
+                    tx.oncomplete = () => resolve("Member removed successfully");
+                };
+
+                getRequest.onerror = () => reject("Error fetching room details");
+            });
+        }
+
+
+
+
+
+
+
+
+        // Call this function after `getRooms()` has data
+        populateChatContainer();
+
+    </script>
+</body>
+
+</html>

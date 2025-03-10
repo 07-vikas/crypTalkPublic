@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page Mobile Devices</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Full-page Centering */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgb(48, 48, 56);
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            color: rgb(177, 177, 177);
+            width: 100%;
+            text-align: center;
+            padding: 30px 0;
+            position: absolute;
+            top: 0;
+
+        }
+
+        body>div:first-of-type {
+            width: 100%;
+            height: 30%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .avatar-div {
+            height: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            overflow: hidden;
+            background-image: url('https://th.bing.com/th/id/OIP.frk9oaRCV-aXQdxzo8ZC8gHaHa?rs=1&pid=ImgDetMain');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Centered Box */
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 300px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+
+            margin-top: 50px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 10%;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 1rem;
+            background-color: aquamarine;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: rgb(50, 150, 150);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Welcome, 👋</h1>
+
+    <div>
+        <div class="avatar-div">
+
+        </div>
+    </div>
+
+    <div class="container">
+        <form action="/login" method="post">
+            <input class="name-input" type="text" name="username" placeholder="Name for chat" required>
+            <button type="submit">Enter</button>
+        </form>
+    </div>
+
+
+
+
+    <script>
+        localStorage.clear();
+        clearAllDatabases(); // Clears all databases
+
+        // clearDatabaseIfNotEmpty();
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+
+            const form = document.querySelector("form");
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                const formData = new FormData(form);
+                const username = formData.get("username");
+
+                const name = document.querySelector('.name-input').value;
+
+                if (name.trim() === "") {
+                    alert("Enter a valid name !")
+                } else {
+                    const id = generateUserId();
+                    const avatarDiv = document.querySelector('.avatar-div');
+
+                    // Get background image from computed styles
+                    let avatarUrl = getComputedStyle(avatarDiv).backgroundImage.replace(/url\(["']?(.*?)["']?\)/, '$1');
+
+                    // Ensure `name` is defined (if getting from input)
+                    let name = document.querySelector('.name-input')?.value || "Guest";
+
+                    // Store in localStorage
+                    localStorage.setItem("userName", name);
+                    localStorage.setItem("userId", id);
+                    localStorage.setItem("userAvatar", avatarUrl);
+
+                    window.location.replace("http://172.21.88.12:8000/user");
+
+
+                }
+
+                // try {
+                //     const response = await fetch("/login", {
+                //         method: "POST",
+                //         headers: {
+                //             "Content-Type": "application/json"
+                //         },
+                //         body: JSON.stringify({ username })
+                //     });
+
+                //     const result = await response.json();
+                //     if (response.ok) {
+                //         console.log("Login successful:", result);
+                //         window.location.href = "/chat"; // Redirect to chat page
+                //     } else {
+                //         console.error("Login failed:", result);
+                //     }
+                // } catch (error) {
+                //     console.error("Error:", error);
+                // }
+            });
+        });
+
+
+        const avatarDiv = document.querySelector(".avatar-div");
+
+        const backgrounds = [
+            "https://wallpapercave.com/wp/wp6988971.jpg",
+            "https://www.techgrapple.com/wp-content/uploads/2016/08/beautiful-sky-whatsapp-chat-background.jpg",
+            "https://wallpapercave.com/wp/wp6988830.jpg",
+            "https://wallpapercave.com/wp/wp4892368.jpg",
+            "https://www.techgrapple.com/wp/wp6028948.jpg",
+            "https://preview.redd.it/vvqgcdp39x551.jpg?auto=webp&s=9736ebe43d68a156afe5f22e294d7f4b757f7686",
+            "https://th.bing.com/th/id/OIP.GlZRCiKdvq64dmxhKkMZ8wHaQD?rs=1&pid=ImgDetMain",
+            "https://wallpapercave.com/wp/wp6989074.jpg",
+            "https://th.bing.com/th/id/OIP._JBlnpE2k_GIxguPJu45LgHaQD?rs=1&pid=ImgDetMain"
+        ];
+
+        let currentIndex = 0;
+
+        // Function to update avatar background
+        function updateAvatar() {
+            avatarDiv.style.backgroundImage = `url('${backgrounds[currentIndex]}')`;
+        }
+
+        // Click event listener for avatar-div
+        avatarDiv.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % backgrounds.length;
+            updateAvatar();
+        });
+
+        // Initialize first avatar
+        updateAvatar();
+
+
+        function generateUserId() {
+            return Math.floor(1000000000 + Math.random() * 9000000000).toString();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // async function clearDatabaseIfNotEmpty() {
+        //     let db = await openDB();
+
+        //     let transaction = db.transaction(["users", "rooms", "messages"], "readwrite");
+        //     let usersStore = transaction.objectStore("users");
+        //     let roomsStore = transaction.objectStore("rooms");
+        //     let messagesStore = transaction.objectStore("messages");
+
+        //     let usersCount = await usersStore.count();
+        //     let roomsCount = await roomsStore.count();
+        //     let messagesCount = await messagesStore.count();
+
+        //     if (usersCount > 0 || roomsCount > 0 || messagesCount > 0) {
+        //         console.log("Database is not empty, clearing now...");
+
+        //         usersStore.clear();
+        //         roomsStore.clear();
+        //         messagesStore.clear();
+
+        //         await transaction.complete;
+        //         console.log("Database cleared successfully.");
+        //     } else {
+        //         console.log("Database is already empty.");
+        //     }
+        // }
+
+
+        function clearAllDatabases() {
+                indexedDB.databases().then(databases => {
+                    databases.forEach(db => {
+                        indexedDB.deleteDatabase(db.name);
+                        console.log(`Deleted database: ${db.name}`);
+                    });
+                }).catch(error => console.error("Error clearing databases:", error));
+            }
+
+
+
+
+
+
+
+
+
+
+        const DB_NAME = "chatApp";
+        const DB_VERSION = 1;
+        let db;
+
+        console.log(DB_NAME);
+
+        // Open IndexedDB
+        function openDB() {
+            console.log("Opening or creating the indexeddb's ....");
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    let db = event.target.result;
+
+                    if (!db.objectStoreNames.contains("rooms")) {
+                        const roomsStore = db.createObjectStore("rooms", { keyPath: "roomId" });
+                    }
+
+                    if (!db.objectStoreNames.contains("messages")) {
+                        const messagesStore = db.createObjectStore("messages", { keyPath: "chatId" });
+                        messagesStore.createIndex("roomId", "roomId", { unique: false });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    console.log("Success ...");
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Add or Join a Room
+        async function joinRoom(roomId, roomName, roomBackgroundUrl, members) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                store.put({ roomId, roomName, roomBackgroundUrl, joinedTime: new Date().toISOString(), members });
+
+                tx.oncomplete = () => resolve("Room joined successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Add a chat message
+        async function addChat(chatId, roomId, chatTime, chatContent, chatStatus, senderName, chatType) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readwrite");
+                const store = tx.objectStore("messages");
+
+                store.put({ chatId, roomId, chatTime, chatContent, chatStatus, senderName, chatType });
+
+                tx.oncomplete = () => resolve("Chat added successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Get all chats from a specific room
+        async function getChatsByRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readonly");
+                const store = tx.objectStore("messages");
+                const index = store.index("roomId");
+                const request = index.getAll(roomId);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Leave a Room (Remove it from IndexedDB)
+        async function leaveRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("rooms", "readwrite");
+                const store = tx.objectStore("rooms");
+
+                store.delete(roomId);
+
+                tx.oncomplete = () => resolve("Room left successfully");
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Clear all chats in a specific room
+        async function clearChatsByRoom(roomId) {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("messages", "readwrite");
+                const store = tx.objectStore("messages");
+                const index = store.index("roomId");
+
+                index.getAll(roomId).onsuccess = (event) => {
+                    const messages = event.target.result;
+                    messages.forEach(msg => store.delete(msg.chatId));
+                };
+
+                tx.oncomplete = () => resolve("Chats cleared for room: " + roomId);
+                tx.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        // Clear Entire Database (Logout)
+        async function clearDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.deleteDatabase(DB_NAME);
+
+                request.onsuccess = () => resolve("Database cleared successfully");
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+        openDB();
+
+
+
+
+        async function logRooms() {
+            const db = await openDB();
+            const tx = db.transaction("rooms", "readonly");
+            const store = tx.objectStore("rooms");
+            const request = store.getAll();
+
+            request.onsuccess = () => console.log("Rooms Data:", request.result);
+            request.onerror = (event) => console.error("Error fetching rooms:", event.target.error);
+        }
+
+        async function logMessagesByRoom(roomId) {
+            const db = await openDB();
+            const tx = db.transaction("messages", "readonly");
+            const store = tx.objectStore("messages");
+            const index = store.index("roomId"); // Using the "roomId" index
+            const request = index.getAll(roomId);
+
+            request.onsuccess = () => console.log(`💬 Messages for Room (${roomId}):`, request.result);
+            request.onerror = (event) => console.error(`❌ Error fetching messages for Room (${roomId}):`, event.target.error);
+        }
+
+        async function logMessages() {
+            const db = await openDB();
+            const tx = db.transaction("messages", "readonly");
+            const store = tx.objectStore("messages");
+            const request = store.getAll();
+
+            request.onsuccess = () => console.log("💬 Messages Collection:", request.result);
+            request.onerror = (event) => console.error("❌ Error fetching messages:", event.target.error);
+        }
+
+
+    </script>
+
+</body>
+
+</html>

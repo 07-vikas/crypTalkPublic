@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css"
+        integrity="sha512-vebUliqxrVkBy3gucMhClmyQP9On/HAWQdKDXRaAlb/FKuTbxkjPKUyqVOxAcGwFDka79eTF+YXwfke1h3/wfg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=videocam" />
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgb(84, 84, 84);
+            width: 100%;
+            height: 100vh;
+
+            position: static;
+
+        }
+
+        nav {
+            width: 100%;
+            height: 60px;
+            background-color: rgb(50, 50, 50);
+
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+
+            position: static;
+        }
+
+        .avatar-div {
+            border-radius: 50%;
+            background-image: url('https://wallpapercave.com/wp/wp6988971.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        nav>div:first-of-type {
+            height: 80%;
+            aspect-ratio: 1/1;
+        }
+
+        nav .chat-name-div {
+            width: 60%;
+            height: 100%;
+
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        nav .chat-name-div p {
+            width: 95%;
+            font-size: 1.25rem;
+            color: white;
+            margin-left: 5%;
+        }
+
+        nav .chat-features-div {
+            width: 20%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-right: 2%;
+
+        }
+
+        nav .chat-features-div i {
+            color: white;
+            font-size: 1.25rem;
+
+        }
+
+        nav .chat-features-div span {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 10%;
+        }
+
+        main {
+            width: 100%;
+            height: calc(100% - 16%);
+
+            background-image: url('https://wallpapercave.com/wp/wp6988971.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: white;
+        }
+
+        main>div {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+        }
+
+
+        main div .chat-recieved {
+            height: auto;
+            width: 70%;
+            background-color: rgb(0, 0, 0);
+            border-radius: 10px;
+            border-top-left-radius: 0px;
+            margin: 15px;
+        }
+
+        main div .chat-recieved p {
+            width: 90%;
+            margin-left: 5%;
+
+            font-size: 0.75rem;
+        }
+
+        main div .chat-recieved .sender-name {
+            height: 15px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            color: #4aa3ff;
+            font-weight: 600;
+            padding: 10px 0px;
+        }
+
+        main div .chat-recieved .chat-content {
+            height: auto;
+            font-size: 0.85rem;
+        }
+
+        main div .chat-recieved .chat-time {
+            height: 15px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            color: #b0b0b0;
+            padding: 10px 0px;
+        }
+
+
+
+
+        main div .chat-sent {
+            height: auto;
+            width: 70%;
+            background-color: rgb(0, 0, 0);
+            border-radius: 10px;
+            border-top-right-radius: 0px;
+            margin-left: 25%;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        main div .chat-sent p {
+            width: 90%;
+            margin-left: 5%;
+            font-size: 0.75rem;
+        }
+
+        main div .chat-sent .chat-content {
+            height: auto;
+            font-size: 0.85rem;
+            padding-top: 10px;
+        }
+
+        main div .chat-sent .chat-details {
+            height: 15px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            color: #b0b0b0;
+            padding: 10px 0px;
+        }
+
+        main div .chat-sent .chat-details span:last-of-type {
+            margin-left: 10px;
+        }
+
+
+        main div .typing-status {
+            height: auto;
+            width: auto;
+            max-width: 70%;
+            background-color: rgb(0, 0, 0);
+            border-radius: 10px;
+            border-top-left-radius: 0px;
+            margin: 15px;
+            padding: 5px 0px;
+        }
+
+        main div .typing-status p {
+            font-size: 0.75rem;
+            height: 15px;
+            display: inline-block;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            color: #4aa3ff;
+            font-weight: 600;
+            padding: 10px 10px;
+        }
+
+
+        .typing-animation-div {
+            display: flex;
+            gap: 3px;
+            padding: 5px 10px;
+        }
+
+        .typing-animation-div span {
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            animation: typing 1.5s infinite ease-in-out;
+        }
+
+        .typing-animation-div span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-animation-div span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-animation-div span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0% {
+                opacity: 0.3;
+                transform: translateY(0px);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translateY(-3px);
+            }
+
+            100% {
+                opacity: 0.3;
+                transform: translateY(0px);
+            }
+        }
+
+
+
+
+
+
+        footer {
+            width: 100%;
+            height: 60px;
+            position: fixed;
+            background-color: rgb(131, 131, 131);
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        footer>button {
+            all: unset;
+            width: 20px;
+            aspect-ratio: 1/1;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        footer input {
+            all: unset;
+            color: aliceblue;
+            font-size: 1rem;
+            width: 60%;
+        }
+
+        footer .message-input::placeholder {
+            font-size: 1rem;
+            color: white;
+        }
+
+        footer i {
+            font-size: 1.35rem;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="fullscreen">
+
+    <nav>
+        <div class="avatar-div">
+
+        </div>
+        <div class="chat-name-div">
+            <p>E4 machines lab</p>
+        </div>
+        <div class="chat-features-div">
+            <span class="material-symbols-outlined">
+                videocam
+            </span>
+            <i class="fa-solid fa-phone"></i>
+        </div>
+    </nav>
+
+
+    <main>
+
+        <div>
+            <div class="chat-recieved">
+                <p class="sender-name">Kunal Thapliyal</p>
+                <p class="chat-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab cupiditate minima
+                    facilis facere quis quas aliquid voluptatem, eum possimus saepe non! Minus officia ratione id
+                    aperiam
+                    inventore, eaque sint est!</p>
+                <p class="chat-time">19:37</p>
+            </div>
+
+            <div class="typing-status">
+                <p>KunalThapliyal</p>
+                <div class="typing-animation-div">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <div class="typing-status">
+                <p>KunalThapliyal</p>
+                <div class="typing-animation-div">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+
+            <div class="chat-sent">
+                <p class="chat-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab cupiditate minima
+                    facilis facere quis quas aliquid voluptatem, eum possimus saepe non! Minus officia ratione id
+                    aperiam
+                    inventore, eaque sint est!</p>
+                <p class="chat-details"><span>19:37</span><span>Delivered</span></p>
+            </div>
+
+            <div class="chat-sent">
+                <p class="chat-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab cupiditate minima
+                    facilis facere quis quas aliquid voluptatem, eum possimus saepe non! Minus officia ratione id
+                    aperiam
+                    inventore, eaque sint est!</p>
+                <p class="chat-details"><span>19:37</span><span>Delivered</span></p>
+            </div>
+
+            <div class="chat-recieved">
+                <p class="sender-name">Kunal Thapliyal</p>
+                <p class="chat-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab cupiditate minima
+                    facilis facere quis quas aliquid voluptatem, eum possimus saepe non! Minus officia ratione id
+                    aperiam
+                    inventore, eaque sint est!</p>
+                <p class="chat-time">19:37</p>
+            </div>
+
+            <div class="chat-recieved">
+                <p class="sender-name">Kunal Thapliyal</p>
+                <p class="chat-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab cupiditate minima
+                    facilis facere quis quas aliquid voluptatem, eum possimus saepe non! Minus officia ratione id
+                    aperiam
+                    inventore, eaque sint est!</p>
+                <p class="chat-time">19:37</p>
+            </div>
+
+            <div class="chat-recieved">
+                <p class="sender-name">Kunal Thapliyal</p>
+                <p class="chat-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab cupiditate minima
+                    facilis facere quis quas aliquid voluptatem, eum possimus saepe non! Minus officia ratione id
+                    aperiam
+                    inventore, eaque sint est!</p>
+                <p class="chat-time">19:37</p>
+            </div>
+
+
+            <div class="chat-recieved">
+                <p class="sender-name">Kunal Thapliyal</p>
+                <p class="chat-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab cupiditate minima
+                    facilis facere quis quas aliquid voluptatem, eum possimus saepe non! Minus officia ratione id
+                    aperiam
+                    inventore, eaque sint est!</p>
+                <p class="chat-time">19:37</p>
+            </div>
+
+
+            <div class="chat-recieved">
+                <p class="sender-name">Kunal Thapliyal</p>
+                <p class="chat-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab cupiditate minima
+                    facilis facere quis quas aliquid voluptatem, eum possimus saepe non! Minus officia ratione id
+                    aperiam
+                    inventore, eaque sint est!</p>
+                <p class="chat-time">19:37</p>
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+    <footer>
+        <button><i class="fa-regular fa-face-smile"></i></button>
+        <button onclick="attachFile()" class="attachment-btn"><i class="attchment-icon fa-solid fa-paperclip"></i>
+            <p>1</p>
+        </button>
+        <input multiple class="file-input" type="file" style="display: none;">
+        <input class="message-input" type="text" placeholder="Type a message">
+        <button onclick="send()" class="send-btn"><i class="send-icon fa-regular fa-paper-plane"></i></button>
+        <!-- <i class="attchment-icon fa-solid fa-paperclip"></i>
+        <input type="text" placeholder="Type a message">
+        <i class="fa-regular fa-paper-plane"></i> -->
+    </footer>
+
+
+
+
+
+    <script>
+        function adjustHeight() {
+            document.querySelector(".fullscreen").style.height = `${window.innerHeight}px`;
+        }
+
+        window.addEventListener("resize", adjustHeight);
+        window.addEventListener("load", adjustHeight);
+
+
+
+
+        const messageInput = document.querySelector(".message-input");
+        const fileInput = document.querySelector('.file-input');
+        const attachmentBtn = document.querySelector('.attachment-btn');
+
+
+        function attachFile() {
+            console.log(messageInput.type);
+            const input = document.querySelector('.file-input');
+            input.click();
+        }
+
+
+        document.querySelector('.attachment-btn').addEventListener('click', (evt) => {
+            evt.preventDefault();
+            console.log("attach btn clicked ...");
+        })
+
+
+        function send() {
+            messageInput.type = 'text';
+        }
+
+        // messageInput.addEventListener('click', (evt) => {
+        //     if (messageInput.type === 'file') {
+        //         evt.preventDefault();
+        //         messageInput.type = 'text';
+        //     }
+        // });
+
+
+        function isInputNotEmpty() {
+            if (!messageInput) return false; // Safety check
+
+            // Check if it's a text input and has a value
+            if (messageInput && messageInput.type === "text" && messageInput.value.trim() !== "") {
+                return true;
+            }
+
+            // Check if it's a file input and has files selected
+            if (fileInput && fileInput.type === "file" && fileInput.files.length > 0) {
+                return true;
+            }
+
+            return false;
+        }
+
+        document.querySelector('.attachment-btn p').style.display = 'none';
+        function checkForFiles() {
+            if (fileInput.files.length > 0) {
+                let p = document.querySelector('.attachment-btn p');
+                document.querySelector('.attachment-btn i').style.display = 'none';
+                p.style.display = 'block';
+                p.innerText = fileInput.files.length;
+
+                styleAttachmentBtnForSelectedFiles();
+            }
+        }
+
+        function styleAttachmentBtnForSelectedFiles() {
+            attachmentBtn.style.borderRadius = '50%'
+            attachmentBtn.style.backgroundColor = 'aquamarine';
+            attachmentBtn.style.color = 'white';
+            attachmentBtn.style.fontSize = '0.75rem';
+        }
+
+
+        function checkInputStatus() {
+            let btn = document.querySelector(".send-btn");
+            const regularIcon = '<i class="send-icon fa-regular fa-paper-plane"></i>';
+            const solidIcon = '<i class="send-icon fa-solid fa-paper-plane"></i>';
+            if (isInputNotEmpty()) {
+                btn.innerHTML = `${solidIcon}`;
+                btn.disabled = false;
+            } else {
+                btn.innerHTML = `${regularIcon}`;
+                btn.disabled = true;
+            }
+        }
+
+        // function checkInputStatusForText() {
+        //     const btn = document.querySelector('.attachment-btn');
+        //     if (!messageInput.value.trim()) {
+        //         btn.disabled = false;
+        //     } else {
+        //         btn.disabled = true;
+        //     }
+        // }
+
+        // Set an interval to check the input status every 500ms
+        setInterval(checkInputStatus, 500);
+
+        // Set an interval to check the input status every 500ms
+        setInterval(checkForFiles, 500);
+
+
+
+    </script>
+</body>
+
+</html>
